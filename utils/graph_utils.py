@@ -35,7 +35,7 @@ def loadGraph(testcase):
             edges.append([u, v, int(items[2])])
         edges.sort(key = lambda x: x[2])
     elif testcase == 'dnc':
-        lines = open("datasets/" + testcase, 'r').readlines()
+        lines = open("datasets/" + testcase, 'r', encoding='utf-8-sig').readlines()
         for line in lines:
             items = line.rstrip().split(',')
             if items[0] == items[1]:
