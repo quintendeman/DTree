@@ -75,4 +75,11 @@ if __name__ == '__main__':
     overall_time = timer() - overall_time_start
     print("TOTAL TIME:", overall_time)
     print("NUM UPDATES:", str(len(updates)))
-    print("UPDATES/SEC:", str(len(updates)/overall_time)) 
+    print("UPDATES/SEC:", str(len(updates)/overall_time))
+
+    file1 = open("results/update_results.txt", 'a')
+    file1.write(input_stream_file)
+    file1.write(" UPDATES/SEC: ")
+    file1.write(str(len(updates)/overall_time))
+    file1.write("\n")
+    file1.close()
