@@ -4,7 +4,6 @@ declare base_dir="$(dirname $(dirname $(realpath $0)))"
 
 cd ${base_dir}
 pip install -r requirements.txt
-
 mkdir -p results
 
 python evaluate_updates.py kron_13
