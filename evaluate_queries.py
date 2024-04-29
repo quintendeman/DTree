@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     file1 = open("results/query_results.txt", 'a')
     file1.write(input_stream_file)
-    file1.write(" UPDATES/SEC: ")
+    file1.write(" QUERIES/SEC: ")
     file1.write(str(total_queries/total_time))
     file1.write("\n")
     file1.close()
