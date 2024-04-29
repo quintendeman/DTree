@@ -21,9 +21,9 @@ from utils.tree_utils import generatePairs
 
 
 if __name__ == '__main__':
-    testcase = sys.argv[1]
+    stream_file = sys.argv[1]
     updates = []
-    input_stream_file = "datasets/" + testcase + "_stream_binary"
+    input_stream_file = "datasets/" + stream_file
     with open(input_stream_file, 'rb') as input_stream:
         print("Reading in entire stream")
         vertexcount = int.from_bytes(input_stream.read(4), "little")
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     for update in updates:
         i += 1
         if(i % 1000 == 0):
-            print("UPDATE", i)
+            print("UPDATE", i, stream_file)
         (update_type,a,b) = update
 
         if (update_type == 0): # EDGE INSERTION
