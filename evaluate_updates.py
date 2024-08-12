@@ -23,63 +23,54 @@ from utils.tree_utils import generatePairs
 if __name__ == '__main__':
     stream_file = sys.argv[1]
     updates = []
-    input_stream_file = "datasets/" + stream_file
-    with open(input_stream_file, 'rb') as input_stream:
-        print("Reading in entire stream")
-        vertexcount = int.from_bytes(input_stream.read(4), "little")
-        updatecount = int.from_bytes(input_stream.read(8), "little")
-        print(vertexcount, "vertices", updatecount, "updates", "in stream.")
-        updatecount = min(updatecount, 100000000)
-        print("Doing", updatecount, "updates.")
-        for i in range(updatecount):
-            update_type = int.from_bytes(input_stream.read(1), "little")
-            src = int.from_bytes(input_stream.read(4), "little")
-            dst = int.from_bytes(input_stream.read(4), "little")
-            updates.append((update_type, src, dst))
+    for batch_type in ["ins","del"]:
+        update_type = 0 if (batch_type == "ins") else 1
+        for batch_num in range(10):
+            updates.append([])
+            input_stream_file = "datasets/" + stream_file + "/" + stream_file + "_sym_batch_" + batch_type + "_" + str(batch_num) + ".txt"
+            with open(input_stream_file, 'r') as input_stream:
+                print("Reading in file", input_stream_file)
+                for line in input_stream.readlines():
+                    _, src, dst = line.split(' ')
+                    updates[update_type*10 + batch_num].append((update_type, src, dst))
 
     graph = defaultdict(set)
     spanningtree, tree_edges, non_tree_edges = constructST_adjacency_list(graph, 0)
     _, Dtree = Dtree_utils.construct_BFS_tree(graph, 0, non_tree_edges)
 
-    print("Doing updates")
-    i = 0
-    overall_time_start = timer()
+    TIMEOUT = 1800
 
-    for update in updates:
-        i += 1
-        if(i % 1000 == 0):
-            print("UPDATE", i, stream_file)
-        (update_type,a,b) = update
+    for batch_num in range(20):
+        batch = updates[batch_num]
+        batch_time_start = timer()
+        for update in batch:
 
-        if (update_type == 0): # EDGE INSERTION
-            if a not in Dtree:
-                Dtree[a] = DTNode(a)
-            if b not in Dtree:
-                Dtree[b] = DTNode(b)
+            if (timer() - batch_time_start > TIMEOUT):
+                print("BATCH", batch_num, "TIMED OUT AFTER", TIMEOUT/60, "MINUTES.")
+                exit()
 
-            root_a, distance_a = Dtree_utils.find_root(Dtree[a])
-            root_b, distance_b = Dtree_utils.find_root(Dtree[b])
+            (update_type,a,b) = update
 
-            if root_a.val != root_b.val:                                # tree edge insertion
-                Dtree_utils.insert_te(Dtree[a], Dtree[b], root_a, root_b)
-            else:                                                       # non tree edge insertion
-                if not (Dtree[a].parent == Dtree[b] or Dtree[b].parent == Dtree[a]):
-                    Dtree_utils.insert_nte(root_a, Dtree[a], distance_a, Dtree[b], distance_b)
-                
-        else: # EDGE DELETION
-            if Dtree[a] in Dtree[b].nte or Dtree[b] in Dtree[a].nte:    # non tree edge deletion
-                Dtree_utils.delete_nte(Dtree[a], Dtree[b])
-            else:                                                       # tree edge deletion
-                Dtree_utils.delete_te(Dtree[a], Dtree[b])
+            if (update_type == 0): # EDGE INSERTION
+                if a not in Dtree:
+                    Dtree[a] = DTNode(a)
+                if b not in Dtree:
+                    Dtree[b] = DTNode(b)
 
-    overall_time = timer() - overall_time_start
-    print("TOTAL TIME:", overall_time)
-    print("NUM UPDATES:", str(len(updates)))
-    print("UPDATES/SEC:", str(len(updates)/overall_time))
+                root_a, distance_a = Dtree_utils.find_root(Dtree[a])
+                root_b, distance_b = Dtree_utils.find_root(Dtree[b])
 
-    file1 = open("results/update_results.txt", 'a')
-    file1.write(input_stream_file)
-    file1.write(" UPDATES/SEC: ")
-    file1.write(str(len(updates)/overall_time))
-    file1.write("\n")
-    file1.close()
+                if root_a.val != root_b.val:                                # tree edge insertion
+                    Dtree_utils.insert_te(Dtree[a], Dtree[b], root_a, root_b)
+                else:                                                       # non tree edge insertion
+                    if not (Dtree[a].parent == Dtree[b] or Dtree[b].parent == Dtree[a]):
+                        Dtree_utils.insert_nte(root_a, Dtree[a], distance_a, Dtree[b], distance_b)
+                    
+            else: # EDGE DELETION
+                if Dtree[a] in Dtree[b].nte or Dtree[b] in Dtree[a].nte:    # non tree edge deletion
+                    Dtree_utils.delete_nte(Dtree[a], Dtree[b])
+                else:                                                       # tree edge deletion
+                    Dtree_utils.delete_te(Dtree[a], Dtree[b])
+
+        batch_time = timer() - batch_time_start
+        print("Batch", str(batch_num), "time:", "{:.3f}".format(batch_time))

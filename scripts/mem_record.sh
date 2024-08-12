@@ -24,8 +24,8 @@ while true; do
 			#echo $pid, $impact, $sum
 		fi
 	done
-	end=$(($(date +%s%N)/1000000))
-	take=$(( end - start ))
+	end=$(($(date +%s%N)/1000000000))
+	take=$(( end ))
 	echo $take, $sum >> $where
 	sleep $delay
 done
