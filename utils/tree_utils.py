@@ -31,7 +31,7 @@ def find_root(node):
 def generatePairs(v_set):
     v_list = list(v_set)
     V = len(v_list)
-    c = 50000000  # 50 millions, 5 millions for duplicate pairs
+    c = 5000000  # 50 millions, 5 millions for duplicate pairs
     pairs = set()
     if c > (V * (V - 1)) // 2:  # generate queries for all pairs of vertices if the number is smaller than 50 million.
         for i in range(V):

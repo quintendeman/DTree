@@ -80,15 +80,15 @@ if __name__ == '__main__':
     current_time = start_timestamp
     count_snapshot = 0
 
-    static = False # SET THIS VARIABLE TO TRUE TO GENERATE THE STATIC GRAPH BINARY
+    static = True # SET THIS VARIABLE TO TRUE TO GENERATE THE STATIC GRAPH BINARY
 
     stream_file_name = "datasets/" + testcase + "_stream_binary"
     if static:
         stream_file_name = "datasets/" + testcase + "_static_binary"
 
     # MANUALLY SET THESE TO THE CORRECT VALUE
-    num_vertices = 1864
-    num_updates = 9556
+    num_vertices = 86803
+    num_updates = 296831
 
     vertex_map = defaultdict()
     vertex_id = 0
@@ -133,11 +133,12 @@ if __name__ == '__main__':
                     inserted_edge[(a, b)] = current_time + survival_time  # we keep the expired time for the inserted edge.
                     expiredDict[current_time + survival_time].add((a, b))
                 else:  # re-insert this edge, refresh the expired timestamp
-                    expired_ts = inserted_edge[(a, b)]
-                    expiredDict[expired_ts].remove((a, b))
-                    inserted_edge[
-                        (a, b)] = current_time + survival_time  # we refresh the expired time for the inserted edge.
-                    expiredDict[current_time + survival_time].add((a, b))
+                    if not static:
+                        expired_ts = inserted_edge[(a, b)]
+                        expiredDict[expired_ts].remove((a, b))
+                        inserted_edge[
+                            (a, b)] = current_time + survival_time  # we refresh the expired time for the inserted edge.
+                        expiredDict[current_time + survival_time].add((a, b))
 
                 # Dtree
                 if a not in Dtree:
@@ -148,11 +149,11 @@ if __name__ == '__main__':
         
             if current_time in expiredDict:
                 for (a, b) in expiredDict[current_time]:
-                    del inserted_edge[(a, b)]
-                    edges_num -= 1
-                    # Dtree
-                    # DELETE (A,B)
                     if not static:
+                        del inserted_edge[(a, b)]
+                        edges_num -= 1
+                        # Dtree
+                        # DELETE (A,B)
                         output_stream.write((1).to_bytes(1, "little"))
                         output_stream.write((vertex_map[a]).to_bytes(4, "little"))
                         output_stream.write((vertex_map[b]).to_bytes(4, "little"))
