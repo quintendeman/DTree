@@ -9,21 +9,17 @@ mkdir -p results/space_results
 
 run_mem_test() {
 	python3 evaluate_space.py $1 &
-	scripts/mem_record.sh evaluate_space.py 2 results/space_results/$1_mem.txt
+	scripts/mem_record.sh evaluate_space.py 10 results/space_results/$1_mem.txt
 	wait
 }
 
-# run_mem_test "kron_13_stream_binary"
-# run_mem_test "kron_15_stream_binary"
-# run_mem_test "kron_16_stream_binary"
-# run_mem_test "kron_17_stream_binary"
-# run_mem_test "kron_18_stream_binary"
-# run_mem_test "dnc_stream_binary"
-# run_mem_test "tech_stream_binary"
-# run_mem_test "enron_stream_binary"
-# run_mem_test "dnc_streamified_binary"
-# run_mem_test "tech_streamified_binary"
-# run_mem_test "enron_streamified_binary"
-run_mem_test grid_1000_10000_03_sym
-run_mem_test Household_lines_5_sym
-run_mem_test CHEM_5_sym
+run_mem_test com-youtube_sym
+run_mem_test as-skitter_sym
+run_mem_test pokec_sym
+run_mem_test wiki-topcats_sym
+run_mem_test stackoverflow_sym
+run_mem_test soc-LiveJournal1_sym
+run_mem_test enwiki_sym
+run_mem_test com-orkut_sym
+run_mem_test twitter_sym
+run_mem_test friendster_sym

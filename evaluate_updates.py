@@ -71,7 +71,7 @@ if __name__ == '__main__':
     spanningtree, tree_edges, non_tree_edges = constructST_adjacency_list(graph, 0)
     _, Dtree = Dtree_utils.construct_BFS_tree(graph, 0, non_tree_edges)
 
-    TIMEOUT = 3600
+    TIMEOUT = 7200
 
     update_times = []
     query_times = []

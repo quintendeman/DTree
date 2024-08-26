@@ -32,7 +32,7 @@ if __name__ == '__main__':
         update_type = 0 if (batch_type == "ins") else 1
         for batch_num in range(10):
             batch_time_start = timer()
-            input_stream_file = "datasets/" + stream_file + "/" + str(batch_num) + "." + batch_type
+            input_stream_file = "datasets/" + stream_file + "/" + stream_file + "_batch_" + batch_type + "_" + str(batch_num) + ".txt"
             with open(input_stream_file, 'r') as input_stream:
                 print("Reading file", input_stream_file, "one line at a time")
                 for line in input_stream:
