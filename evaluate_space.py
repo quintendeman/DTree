@@ -1,5 +1,4 @@
 import sys
-import time
 import random
 from _collections import defaultdict
 from utils import tree_utils
@@ -37,21 +36,19 @@ if __name__ == '__main__':
                 print("Reading file", input_stream_file, "one line at a time")
                 for line in input_stream:
                     a, b = line.split(' ')
+                    
                     if (update_type == 0): # EDGE INSERTION
                         if a not in Dtree:
                             Dtree[a] = DTNode(a)
                         if b not in Dtree:
                             Dtree[b] = DTNode(b)
-
                         root_a, distance_a = Dtree_utils.find_root(Dtree[a])
                         root_b, distance_b = Dtree_utils.find_root(Dtree[b])
-
                         if root_a.val != root_b.val:                                # tree edge insertion
                             Dtree_utils.insert_te(Dtree[a], Dtree[b], root_a, root_b)
                         else:                                                       # non tree edge insertion
                             if not (Dtree[a].parent == Dtree[b] or Dtree[b].parent == Dtree[a]):
                                 Dtree_utils.insert_nte(root_a, Dtree[a], distance_a, Dtree[b], distance_b)
-                            
                     else: # EDGE DELETION
                         if Dtree[a] in Dtree[b].nte or Dtree[b] in Dtree[a].nte:    # non tree edge deletion
                             Dtree_utils.delete_nte(Dtree[a], Dtree[b])

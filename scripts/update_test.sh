@@ -6,13 +6,13 @@ cd ${base_dir}
 pip install -r requirements
 mkdir -p results
 
-python evaluate_updates.py com-youtube_sym
-python evaluate_updates.py as-skitter_sym
-python evaluate_updates.py pokec_sym
-python evaluate_updates.py wiki-topcats_sym
-python evaluate_updates.py stackoverflow_sym
-python evaluate_updates.py soc-LiveJournal1_sym
-python evaluate_updates.py enwiki_sym
-python evaluate_updates.py com-orkut_sym
-python evaluate_updates.py twitter_sym
-python evaluate_updates.py friendster_sym
+python3 evaluate_updates.py com-youtube_sym
+python3 evaluate_updates.py as-skitter_sym
+python3 evaluate_updates.py pokec_sym
+python3 evaluate_updates.py wiki-topcats_sym
+python3 evaluate_updates.py stackoverflow_sym
+python3 evaluate_updates.py soc-LiveJournal1_sym
+python3 evaluate_updates.py enwiki_sym
+python3 evaluate_updates.py com-orkut_sym
+python3 evaluate_updates.py twitter_sym
+python3 evaluate_updates.py friendster_sym
