@@ -29,7 +29,7 @@ if __name__ == '__main__':
         vertexcount = int.from_bytes(input_stream.read(4), "little")
         updatecount = int.from_bytes(input_stream.read(8), "little")
         print(vertexcount, "vertices", updatecount, "updates", "in stream.")
-        # updatecount = min(updatecount, 100000000)
+        updatecount = min(updatecount, 500 * (10 ** 6))
         print("Doing", updatecount, "operations.")
         for i in range(updatecount):
             update_type = int.from_bytes(input_stream.read(1), "little")
