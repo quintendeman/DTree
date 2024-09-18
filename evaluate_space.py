@@ -46,6 +46,9 @@ if __name__ == '__main__':
             a = int.from_bytes(input_stream.read(4), "little")
             b = int.from_bytes(input_stream.read(4), "little")
 
+            if (update_type == 2):
+                continue
+
             if (update_type == 0): # EDGE INSERTION
                 if a not in Dtree:
                     Dtree[a] = DTNode(a)
