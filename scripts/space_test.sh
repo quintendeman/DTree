@@ -9,29 +9,47 @@ mkdir -p results/space_results
 
 run_mem_test() {
 	python evaluate_space.py $1 &
-	scripts/mem_record.sh evaluate_space.py 0.1 results/space_results/$1_mem.txt
+	scripts/mem_record.sh evaluate_space.py 0.5 results/space_results/$1_mem.txt
 	wait
 }
 
-# run_mem_test "kron_13_stream_binary"
-# run_mem_test "kron_15_stream_binary"
-# run_mem_test "kron_16_stream_binary"
-# run_mem_test "kron_17_stream_binary"
-# run_mem_test "kron_18_stream_binary"
+declare -a streams=(
+[0]="kron_13_query10_binary"
+[1]="kron_15_query10_binary"
+[2]="kron_16_query10_binary"
+[3]="kron_17_query10_binary"
+[4]="kron_18_query10_binary"
+#
+[5]="dnc_query10_binary"
+[6]="tech_query10_binary"
+[7]="enron_query10_binary"
+#
+[8]="twitter_query10_binary"
+[9]="stanford_query10_binary"
+[10]="random2N_query10_binary"
+[11]="randomNLOGN_query10_binary"
+[12]="randomNSQRTN_query10_binary"
+[13]="randomDIV_query10_binary"
+# Fixed Forest
+[14]="kron_13_ff_query10_binary"
+[15]="kron_15_ff_query10_binary"
+[16]="kron_16_ff_query10_binary"
+[17]="kron_17_ff_query10_binary"
+[18]="kron_18_ff_query10_binary"
+#
+[19]="dnc_ff_query10_binary"
+[20]="tech_ff_query10_binary"
+[21]="enron_ff_query10_binary"
+#
+[22]="twitter_ff_query10_binary"
+[23]="stanford_ff_query10_binary"
+[24]="random2N_ff_query10_binary"
+[25]="randomNLOGN_ff_query10_binary"
+[26]="randomNSQRTN_ff_query10_binary"
+[27]="randomDIV_ff_query10_binary"
+)
 
-run_mem_test "dnc_stream_binary"
-run_mem_test "tech_stream_binary"
-run_mem_test "enron_stream_binary"
-run_mem_test "dnc_streamified_binary"
-run_mem_test "tech_streamified_binary"
-run_mem_test "enron_streamified_binary"
-run_mem_test "dnc_ff_binary"
-run_mem_test "tech_ff_binary"
-run_mem_test "enron_ff_binary"
-
-run_mem_test "twitter_stream_binary"
-run_mem_test "stanford_stream_binary"
-run_mem_test "random2N_stream_binary"
-run_mem_test "randomNLOGN_stream_binary"
-run_mem_test "randomNSQRTN_stream_binary"
-run_mem_test "randomDIV_stream_binary"
+for i in $(seq 0 13);
+do
+	run_mem_test ${streams[$i]}
+done
