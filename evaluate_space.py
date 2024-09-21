@@ -28,6 +28,7 @@ if __name__ == '__main__':
         vertexcount = int.from_bytes(input_stream.read(4), "little")
         updatecount = int.from_bytes(input_stream.read(8), "little")
         print(vertexcount, "vertices", updatecount, "updates", "in stream.")
+        updatecount = min(updatecount, 500 * (10 ** 6))
         print("Doing", updatecount, "updates.")
 
         graph = defaultdict(set)
@@ -39,7 +40,7 @@ if __name__ == '__main__':
 
         for i in range(updatecount):
 
-            if(i % 1000 == 0):
+            if(i % 10000000 == 0):
                 print("UPDATE", i, stream_file)
 
             update_type = int.from_bytes(input_stream.read(1), "little")
