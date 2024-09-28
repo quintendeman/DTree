@@ -49,27 +49,7 @@ if __name__ == '__main__':
     spanningtree, tree_edges, non_tree_edges = constructST_adjacency_list(graph, 0)
     _, Dtree = Dtree_utils.construct_BFS_tree(graph, 0, non_tree_edges)
 
-    # updates = []
-    # queries = []
-    # for batch_type in ["ins","del"]:
-    #     update_type = 0 if (batch_type == "ins") else 1
-    #     for batch_num in range(10):
-    #         updates.append([])
-    #         input_stream_file = "datasets/" + stream_file + "/" + stream_file + "_batch_" + batch_type + "_" + str(batch_num) + ".txt"
-    #         with open(input_stream_file, 'r') as input_stream:
-    #             print("Reading in file", input_stream_file)
-    #             for line in input_stream.readlines():
-    #                 src, dst = line.split(' ')
-    #                 updates[update_type*10 + batch_num].append((update_type, src, dst))
-    #         queries.append([])
-    #         input_stream_file = "datasets/" + stream_file + "/" + stream_file + "_query_" + batch_type + "_" + str(batch_num) + ".txt"
-    #         with open(input_stream_file, 'r') as input_stream:
-    #             print("Reading in file", input_stream_file)
-    #             for line in input_stream.readlines():
-    #                 src, dst = line.split(' ')
-    #                 queries[update_type*10 + batch_num].append((src, dst))
-
-    TIMEOUT = 7200
+    # TIMEOUT = 7200
 
     update_times = []
     query_times = []
@@ -77,12 +57,17 @@ if __name__ == '__main__':
 
     for batch_type in ["ins","del"]:
         update_type = 0 if (batch_type == "ins") else 1
-        for batch_num in range(10):
-            update_time_start = timer()
-            input_stream_file = "datasets/" + stream_file + "/" + stream_file + "_batch_" + batch_type + "_" + str(batch_num) + ".txt"
-            with open(input_stream_file, 'r') as input_stream:
-                print("Reading file", input_stream_file, "one line at a time")
-                for line in input_stream:
+        updates_done = 0
+        input_update_file = "datasets/" + stream_file + "." + batch_type
+        input_query_file = "datasets/" + stream_file + "_query." + batch_type
+        print(input_update_file)
+        with open(input_update_file, 'r') as update_stream:
+            edge_count = len(update_stream.readlines())
+        with open(input_update_file, 'r') as update_stream:
+            with open(input_query_file, 'r') as query_stream:
+
+                update_time_start = timer()
+                for line in update_stream:
                     a, b = line.split(' ')
                     
                     if (update_type == 0): # EDGE INSERTION
@@ -102,18 +87,22 @@ if __name__ == '__main__':
                             Dtree_utils.delete_nte(Dtree[a], Dtree[b])
                         else:                                                       # tree edge deletion
                             Dtree_utils.delete_te(Dtree[a], Dtree[b])
+                    updates_done += 1
 
-            update_time = timer() - update_time_start
-            update_times.append(update_time)
+                    if (updates_done%(edge_count//10) == 0):
+                        print("Batch", 10*updates_done//edge_count)
+                        update_time = timer() - update_time_start
+                        update_times.append(update_time)
 
-            query_time_start = timer()
-            input_query_file = "datasets/" + stream_file + "/" + stream_file + "_query_" + batch_type + "_" + str(batch_num) + ".txt"
-            with open(input_query_file, 'r') as input_stream:
-                for line in input_stream:
-                    x, y = line.split(' ')
-                    if x in Dtree and y in Dtree:
-                        Dtree_utils.query(Dtree[x], Dtree[y])
-            query_time = timer() - query_time_start
-            query_times.append(query_time)
+                        query_time_start = timer()
+                        for i in range(1000000):
+                            line = query_stream.readline()
+                            x, y = line.split(' ')
+                            if x in Dtree and y in Dtree:
+                                Dtree_utils.query(Dtree[x], Dtree[y])
+                        query_time = timer() - query_time_start
+                        query_times.append(query_time)
+
+                        update_time_start = timer()
 
     write_results(stream_file, update_times, query_times, -1)

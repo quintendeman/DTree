@@ -6,6 +6,12 @@ cd ${base_dir}
 pip install -r requirements
 mkdir -p results
 
+python3 evaluate_updates.py Household_lines_5_sym
+python3 evaluate_updates.py CHEM_5_sym
+python3 evaluate_updates.py grid_1000_10000_03_sym
+python3 evaluate_updates.py Germany_sym
+python3 evaluate_updates.py RoadUSA_sym
+python3 evaluate_updates.py rmat_26
 python3 evaluate_updates.py com-youtube_sym
 python3 evaluate_updates.py as-skitter_sym
 python3 evaluate_updates.py pokec_sym
