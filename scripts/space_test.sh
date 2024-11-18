@@ -49,7 +49,7 @@ declare -a streams=(
 [27]="randomDIV_ff_query10_binary"
 )
 
-for i in $(seq 0 13);
+for i in $(seq 0 27);
 do
 	run_mem_test ${streams[$i]}
 done
